@@ -1,0 +1,34 @@
+<!-- accounts/templates/registration/login.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FinSight</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Entrar na sua conta</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Nome de usuário</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Senha</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-primary submit-btn">Entrar</button>
+            </form>
+            <div class="form-footer">
+                <p>Não tem conta? <a href="{% url 'signup' %}">Cadastre-se</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

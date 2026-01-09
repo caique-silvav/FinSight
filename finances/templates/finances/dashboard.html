@@ -1,0 +1,63 @@
+{% extends 'finances/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Dashboard Financeiro</h1>
+
+<div class="summary-cards">
+    <div class="card balance">
+        <h3>Saldo Atual</h3>
+        <div class="value">R$ {{ balance|floatformat:2 }}</div>
+    </div>
+    <div class="card income">
+        <h3>Receitas</h3>
+        <div class="value">R$ {{ total_income|floatformat:2 }}</div>
+    </div>
+    <div class="card expense">
+        <h3>Despesas</h3>
+        <div class="value">R$ {{ total_expense|floatformat:2 }}</div>
+    </div>
+</div>
+
+{% if chart %}
+<div class="chart-container">
+    <h2>Gastos por Categoria</h2>
+    <div>{{ chart|safe }}</div>
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>🚀 Nenhuma transação registrada ainda</h3>
+    <p>Adicione sua primeira receita ou despesa para começar.</p>
+    <a href="{% url 'add_transaction' %}" class="btn btn-primary" style="margin-top: 1rem;">+ Adicionar Transação</a>
+</div>
+{% endif %}
+
+{% if recent_transactions %}
+<h2>Transações Recentes</h2>
+<div class="transactions-list">
+    {% for trans in recent_transactions %}
+    <div class="transaction-item">
+        <div>
+            <span class="transaction-amount {% if trans.is_income %}transaction-income{% else %}transaction-expense{% endif %}">
+                {% if trans.is_income %}+{% else %}-{% endif %} R$ {{ trans.amount|floatformat:2 }}
+            </span>
+            <span class="transaction-meta">{{ trans.category }} • {{ trans.date|date:"d/m/Y" }}</span>
+            {% if trans.description %}
+                <div class="transaction-meta">{{ trans.description }}</div>
+            {% endif %}
+        </div>
+        <form method="post" action="{% url 'delete_transaction' trans.id %}" onsubmit="return confirm('Excluir esta transação?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Excluir</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<a href="{% url 'add_transaction' %}" class="btn btn-primary">+ Nova Transação</a>
+{% endblock %}

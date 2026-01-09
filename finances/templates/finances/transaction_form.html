@@ -1,0 +1,39 @@
+{% extends 'finances/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{% if 'add' in request.path %}Adicionar Transação{% else %}Editar Transação{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.type.id_for_label }}">Tipo</label>
+            {{ form.type }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.amount.id_for_label }}">Valor</label>
+            {{ form.amount }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">Categoria</label>
+            {{ form.category }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Descrição (opcional)</label>
+            {{ form.description }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.date.id_for_label }}">Data</label>
+            {{ form.date }}
+        </div>
+        <button type="submit" class="btn btn-primary submit-btn">Salvar</button>
+    </form>
+    <div class="form-footer">
+        <a href="{% url 'dashboard' %}">← Voltar ao Dashboard</a>
+    </div>
+</div>
+{% endblock %}
